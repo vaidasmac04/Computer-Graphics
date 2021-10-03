@@ -7,3 +7,12 @@
 span {
     color: red;
 }
+
+#redraw-button {
+    margin-top: 10px;
+    margin-left: 1px;
+}
+
+canvas {
+    margin-left: 10px;
+}

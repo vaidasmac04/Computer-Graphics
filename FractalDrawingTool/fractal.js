@@ -5,7 +5,7 @@ window.onload = () => {
   draw(fractalStepCount);
 };
 
-function draw(stepCount = 5) {
+function draw(stepCount = 5, isColorsEnabled=true) {
   const canvas = document.getElementById("canvas");
 
   if (!canvas.getContext) {
@@ -30,7 +30,7 @@ function draw(stepCount = 5) {
     ctx.stroke();
   }
 
-  function _drawFractal(stepCount) {
+  function _drawFractal(stepCount, color) {
     if (stepCount > 0) {
       stepCount = stepCount - 1;
 
@@ -53,20 +53,27 @@ function draw(stepCount = 5) {
       ctx.transform(0.5, 0, 0, 0.5, width / 2, height / 2);
       _drawFractal(stepCount, (color = "blue"));
     } else {
-      _drawBaseFractalFigure(color);
+      _drawBaseFractalFigure(color, isColorsEnabled);
     }
   }
 
-  function _drawBaseFractalFigure(color) {
+  function _drawBaseFractalFigure(color, isColorsEnabled) {
     ctx.beginPath();
     ctx.moveTo(0, 0);
     ctx.lineTo(500, 0);
     ctx.lineTo(500, 500);
     ctx.lineTo(0, 275);
     ctx.closePath();
+
+    if (isColorsEnabled){
+      ctx.fillStyle = color;
+      ctx.fill();
+    } else {
+      ctx.lineWidth = 10;
+      ctx.strokeFill = "black";
+    }
+
     ctx.stroke();
-    ctx.fillStyle = color;
-    ctx.fill();
   }
 }
 
@@ -89,9 +96,11 @@ function onRedrawClicked() {
 
   const canvasSizeInput = document.getElementById("size-input");
   const fractalStepCountInput = document.getElementById("step-count-input");
+  const enableColorsCheckbox = document.getElementById("enable-colors-checkbox");
 
   const newSize = canvasSizeInput.value;
   const newFractalStepCount = fractalStepCountInput.value;
+  const isColorsEnabled = !enableColorsCheckbox.checked;
 
   hideValidationErrors([stepCountInputErrorId, canvasSizeInputErrorId]);
 
@@ -126,14 +135,13 @@ function onRedrawClicked() {
   canvas.setAttribute("width", newSize);
   canvas.setAttribute("height", newSize);
 
-  draw(newFractalStepCount);
+  draw(newFractalStepCount, isColorsEnabled);
 }
 
 function hideValidationErrors(elementsIds) {
   for (let i = 0; i < elementsIds.length; i++) {
     const elementToHide = document.getElementById(elementsIds[i]);
     elementToHide.style.display = "none";
-    console.log(elementsIds[i]);
   }
 }
 
