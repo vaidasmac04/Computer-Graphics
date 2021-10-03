@@ -7,7 +7,7 @@
 </p>
 
 <p align="center">
-  <em>Transoformations</em>
+  <em>Transformations</em>
   <br> <br>
   <img src="image-explained.png">
 </p>
