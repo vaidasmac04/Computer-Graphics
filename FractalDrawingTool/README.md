@@ -1,7 +1,13 @@
 # Fractal Drawing Tool
 
-Original image
-![original](image-original.png)
+<p align="center">
+  <em>Original image</em>
+  <br> <br>
+  <img src="image-original.png">
+</p>
 
-Transformations
-![explained](image-explained.png)
+<p align="center">
+  <em>Transoformations</em>
+  <br> <br>
+  <img src="image-explained.png">
+</p>
