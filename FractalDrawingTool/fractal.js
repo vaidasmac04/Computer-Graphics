@@ -1,8 +1,11 @@
+let stepCountBase;
+
 window.onload = () => {
-  const fractalStepCount = 5;
+  const fractalStepCount = 0;
   setDefaultOptions(500, fractalStepCount);
   addEventHandlers();
   draw(fractalStepCount);
+  stepCountBase = fractalStepCount;
 };
 
 function draw(stepCount = 5, isColorsEnabled=true) {
@@ -30,50 +33,53 @@ function draw(stepCount = 5, isColorsEnabled=true) {
     ctx.stroke();
   }
 
-  function _drawFractal(stepCount, color) {
+  function _drawFractal(stepCount) {
     if (stepCount > 0) {
       stepCount = stepCount - 1;
 
       ctx.save();
-      ctx.save();
-      ctx.save();
-
+      if(stepCount == stepCountBase-1){
+        ctx.fillStyle = "orange";
+      }
       ctx.transform(0, 0.5, -0.5, 0, width / 2, 0);
-      _drawFractal(stepCount, (color = "orange"));
+      _drawFractal(stepCount);
       ctx.restore();
 
+      ctx.save();
+      if(stepCount == stepCountBase-1){
+        ctx.fillStyle = "red";
+      }
       ctx.transform(-0.5, 0, 0, 0.5, width, 0);
-      _drawFractal(stepCount, (color = "red"));
+      _drawFractal(stepCount);
       ctx.restore();
 
+      ctx.save();
+      if(stepCount == stepCountBase-1){
+        ctx.fillStyle = "green";
+      }
       ctx.transform(0, 0.25, 0.25, 0, width / 4, height / 2);
-      _drawFractal(stepCount, (color = "green"));
+      _drawFractal(stepCount);
       ctx.restore();
 
       ctx.transform(0.5, 0, 0, 0.5, width / 2, height / 2);
-      _drawFractal(stepCount, (color = "blue"));
+      if(stepCount == stepCountBase-1){
+        ctx.fillStyle = "blue";
+      }
+      _drawFractal(stepCount);
+
     } else {
-      _drawBaseFractalFigure(color, isColorsEnabled);
+      _drawBaseFractalFigure();
     }
   }
 
-  function _drawBaseFractalFigure(color, isColorsEnabled) {
+  function _drawBaseFractalFigure() {
     ctx.beginPath();
     ctx.moveTo(0, 0);
     ctx.lineTo(500, 0);
     ctx.lineTo(500, 500);
     ctx.lineTo(0, 275);
     ctx.closePath();
-
-    if (isColorsEnabled){
-      ctx.fillStyle = color;
-      ctx.fill();
-    } else {
-      ctx.lineWidth = 10;
-      ctx.strokeFill = "black";
-    }
-
-    ctx.stroke();
+    ctx.fill();
   }
 }
 
@@ -96,11 +102,9 @@ function onRedrawClicked() {
 
   const canvasSizeInput = document.getElementById("size-input");
   const fractalStepCountInput = document.getElementById("step-count-input");
-  const enableColorsCheckbox = document.getElementById("enable-colors-checkbox");
 
   const newSize = canvasSizeInput.value;
   const newFractalStepCount = fractalStepCountInput.value;
-  const isColorsEnabled = !enableColorsCheckbox.checked;
 
   hideValidationErrors([stepCountInputErrorId, canvasSizeInputErrorId]);
 
@@ -120,10 +124,10 @@ function onRedrawClicked() {
       "Fractal step count is required"
     );
     isValid = false;
-  } else if (newFractalStepCount <= 0) {
+  } else if (newFractalStepCount < 0) {
     showValidationError(
       stepCountInputErrorId,
-      "Step count must be positive number"
+      "Step count must be positive number or zero"
     );
     isValid = false;
   }
@@ -134,8 +138,9 @@ function onRedrawClicked() {
 
   canvas.setAttribute("width", newSize);
   canvas.setAttribute("height", newSize);
+  stepCountBase = newFractalStepCount;
 
-  draw(newFractalStepCount, isColorsEnabled);
+  draw(newFractalStepCount);
 }
 
 function hideValidationErrors(elementsIds) {
