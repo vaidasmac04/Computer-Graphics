@@ -1,0 +1,42 @@
+<html>
+  <head>
+    <script src="fractal.js"></script>
+    <link rel="stylesheet" href="styles.css">
+  </head>
+
+  <body>
+    <h1>Fractal drawing tool</h1>
+
+    <div id="options-block">
+      Canvas options &#8594
+      <label for="size">size:</label>
+      <input
+        type="number"
+        id="size-input"
+        name="size"
+        min="50"
+        max="1000"
+        step="50"
+      />
+      <span id="size-input-error"></span>
+      <br />
+
+      Fractal drawing options &#8594
+      <label for="step-input-count">step count:</label>
+      <input
+        type="number"
+        id="step-count-input"
+        name="step-count"
+        min="0"
+        max="10"
+        step="1"
+      />
+      <span id="step-count-input-error"></span>
+      <br/>
+
+      <button id="redraw-button">Redraw</button>
+    </div>
+
+    <canvas id="canvas" width="500" height="500"> </canvas>
+  </body>
+</html>

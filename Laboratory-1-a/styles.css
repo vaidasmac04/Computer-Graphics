@@ -1,0 +1,18 @@
+#options-block {
+    margin-top: 5px;
+    margin-bottom: 15px;
+    margin-left: 10px;;
+}
+
+span {
+    color: red;
+}
+
+#redraw-button {
+    margin-top: 10px;
+    margin-left: 1px;
+}
+
+canvas {
+    margin-left: 10px;
+}
