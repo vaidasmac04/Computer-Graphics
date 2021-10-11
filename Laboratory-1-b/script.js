@@ -3,16 +3,17 @@ const canvasHeight = 500;
 const animationFramesCount = 100;
 let requestAnimationFrameId;
 let delayBetweenFrames;
+let color = "orange";
 
 window.onload = () => {
   adjustCanvasSize();
   adjustWidths();
   setDelayBetweenFrames();
   addEventHandlers();
-  draw(0);
+  draw();
 };
 
-function draw(transformationIndex = 0) {
+function draw(transformationIndex = -1) {
   const canvas = document.getElementById("canvas");
 
   if (!canvas.getContext) {
@@ -23,36 +24,40 @@ function draw(transformationIndex = 0) {
 
   ctx.clearRect(0, 0, canvasWidth, canvasHeight);
   drawBorder();
+  drawBaseFigure(color, false);
 
-  var startTime, now, then, elapsed;
+  var then, elapsed;
   let t = 0;
 
   then = window.performance.now();
-  startTime = then;
-
-  drawBaseFigure("rgb(0, 255, 0)", false);
 
   let applyTransformations = () => {};
 
   if (transformationIndex === 0) {
     applyTransformations = transform_0;
+    color = "orange";
   } else if (transformationIndex === 1) {
     applyTransformations = transform_1;
+    color = "red";
   } else if (transformationIndex === 2) {
     applyTransformations = transform_2;
+    color = "green";
   } else if (transformationIndex === 3) {
     applyTransformations = transform_3;
+    color = "blue";
   }
 
-  animate();
+  if (transformationIndex !== -1) {
+    animate();
+  }
 
   let moreThanOneCount = 0;
 
   function animate(currentTime) {
-    if (t >= 1 && moreThanOneCount < 5) {
+    if (t >= 1 && moreThanOneCount < 10) {
         t = 1;
         moreThanOneCount++;
-    } else if(t >= 1 && moreThanOneCount === 5) {
+    } else if(t >= 1 && moreThanOneCount === 10) {
         return;
     }
 
@@ -65,9 +70,6 @@ function draw(transformationIndex = 0) {
 
       ctx.clearRect(0, 0, canvasWidth, canvasHeight);
       drawBorder();
-
-      greenColor = (1 - t) * 255;
-      color = "rgb(0," + greenColor.toString() + ",0)";
 
       ctx.save();
       applyTransformations(t);
@@ -115,8 +117,9 @@ function draw(transformationIndex = 0) {
 
   function transform_2(t) {
     ctx.translate(canvasWidth * 0.25 * t, canvasHeight * 0.5 * t);
+    ctx.rotate(-(Math.PI / 2) * t);
     ctx.scale(3 / 4 - t, 1 - 3 / 4 * t);
-    ctx.rotate(-(Math.PI + Math.PI / 2) * t);
+    
   }
 
   function transform_3(t) {
@@ -142,11 +145,15 @@ function adjustWidths() {
 
   const speedSlider = document.getElementById("speed-slider");
   speedSlider.style.width = canvasWidth;
+
+  const resetButton = document.getElementById("reset-button");
+  resetButton.style.width = canvasWidth;
 }
 
 function addEventHandlers() {
   onTransformationButtonClicked();
   onSpeedSliderChange();
+  onResetButtonClicked();
 }
 
 function onTransformationButtonClicked() {
@@ -163,6 +170,14 @@ function onTransformationButtonClicked() {
 function onSpeedSliderChange() {
     const speedSlider = document.getElementById("speed-slider");
     speedSlider.addEventListener("change", setDelayBetweenFrames);
+}
+
+function onResetButtonClicked() {
+  const resetButton = document.getElementById("reset-button");
+  resetButton.addEventListener("click", () => {
+    window.cancelAnimationFrame(requestAnimationFrameId);
+    draw();
+  });
 }
 
 function getTransformationButtons() {
